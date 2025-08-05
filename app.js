@@ -2,7 +2,13 @@ const express = require('express');
 
 const app = express();
 const port = 3000;
+
+const todoRoutes = require('./routes/todo.js');
+const { todos } = require('./routes/todo.js'); //Menambahkan impor todos untuk digunakan di app.js
+
 app.use(express.json());
+app.use("/todos", todoRoutes); // Menggunakan router dari todo.js
+
 // Atur EJS sebagai view Engine
 app.set('view engine', 'ejs');
 
