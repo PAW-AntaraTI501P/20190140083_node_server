@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <title>Daftar Tugas Saya</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1>Daftar Tugas Saya</h1>
+      <p>Ini adalah halaman daftar tugas saya.</p>
+
+      <% if (todos && todos.length > 0) { %>
+      <ul class="list-group">
+        <% todos.forEach(function(todo) { %>
+        <li class="list-group-item">
+          ID: <%= todo.id %> Tugas: <%= todo.task %>
+          <div class="mt-2">
+            <!-- Tombol GET -->
+            <button class="btn btn-info btn-sm" onclick="getTodo(<%= todo.id %>)">GET</button>
+            <!-- Tombol PUT -->
+            <button class="btn btn-warning btn-sm" onclick="updateTodo(<%= todo.id %>)">PUT</button>
+            <!-- Tombol DELETE -->
+            <button class="btn btn-danger btn-sm" onclick="deleteTodo(<%= todo.id %>)">DELETE</button>
+          </div>
+        </li>
+        <% }); %>
+      </ul>
+      <% } else { %>
+      <p>Tidak ada tugas yang tersedia.</p>
+      <% } %>
+
+      <!-- Tombol POST -->
+      <button class="btn btn-success mt-3" onclick="addTodo()">POST</button>
+      <a href="/" class="btn btn-primary mt-3 ml-2">Go to Home</a>
+    </div>
+
+    <script>
+      function getTodo(id) {
+        fetch(`/todos/${id}`)
+          .then(res => res.json())
+          .then(data => alert(`GET Todo: ${JSON.stringify(data)}`))
+          .catch(err => alert("Terjadi kesalahan saat GET"));
+      }
+
+      function addTodo() {
+        const newTask = prompt("Masukkan nama tugas baru:");
+        if (newTask) {
+          fetch('/todos', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task: newTask })
+          })
+            .then(res => res.json())
+            .then(data => {
+              alert('POST berhasil!');
+              location.reload();
+            });
+        }
+      }
+
+      function updateTodo(id) {
+        const updatedTask = prompt("Masukkan task baru:");
+        if (updatedTask) {
+          fetch(`/todos/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task: updatedTask })
+          })
+            .then(res => res.json())
+            .then(data => {
+              alert('PUT berhasil!');
+              location.reload();
+            });
+        }
+      }
+
+      function deleteTodo(id) {
+        if (confirm("Yakin ingin menghapus tugas ini?")) {
+          fetch(`/todos/${id}`, { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => {
+              alert('DELETE berhasil!');
+              location.reload();
+            });
+        }
+      }
+    </script>
+  </body>
+</html>

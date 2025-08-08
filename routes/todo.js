@@ -1,11 +1,10 @@
-// todo.js
 const express = require("express");
 const router = express.Router();
 
 // Data dummy
 let todos = [
-  { id: 1, task: "Belajar Node.js", },
-  { id: 2, task: "Membuat API", },
+  { id: 1, task: "Belajar Node.js" },
+  { id: 2, task: "Membuat API" }
 ];
 
 // Endpoint untuk mendapatkan semua tugas
@@ -24,7 +23,7 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
   const newTodo = {
     id: todos.length + 1,
-    task: req.body.task,
+    task: req.body.task
   };
   todos.push(newTodo);
   res.status(201).json(newTodo);
@@ -48,6 +47,5 @@ router.delete("/:id", (req, res) => {
   res.status(204).send();
 });
 
-module.exports = router;
-// Tambahkan ini untuk mengekspor data todos juga
-module.exports.todos = todos;
+// Ekspor router dan data todos
+module.exports = {router,todos};
